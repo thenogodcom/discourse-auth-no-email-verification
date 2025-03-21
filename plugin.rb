@@ -4,18 +4,23 @@
 # authors: thenogodcom
 # url: https://github.com/thenogodcom/discourse-auth-no-email-verification
 
-after_initialize do
-  if SiteSetting.auth_no_email_enabled
-    on(:user_created) do |user|
-      user.active = true
-      user.approved = true if !SiteSetting.must_approve_users?
-      user.save! # <--- Reverted to save!
+enabled_site_setting :skip_email_verification_enabled
 
-      if user.staged
-          EmailToken.where(user_id: user.id).update_all(confirmed: true)
-      elsif token = EmailToken.find_by(email: user.email)
+after_initialize do
+  next unless SiteSetting.skip_email_verification_enabled
+
+  on(:user_created) do |user|
+    user.active = true
+    user.approved = true unless SiteSetting.must_approve_users?
+    user.save!
+
+    if user.staged # For invitations, the token is on the staged user.
+      EmailToken.where(user_id: user.id).update_all(confirmed: true)
+    else          # For direct signups, we must find the associated EmailToken, if any
+      token = EmailToken.find_by(email: user.email)
+      if token
           token.confirmed = true
-          token.save! # <--- Reverted
+          token.save!
       end
     end
   end
