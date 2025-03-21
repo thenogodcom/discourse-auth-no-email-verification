@@ -1,4 +1,4 @@
-# name: discourse-skip-email-verification
+# name: discourse-auth-no-email-verification
 # about: Skip email verification during user registration (Universal - Direct Signup and Invitations)
 # version: 2.0
 # authors: thenogodcom
