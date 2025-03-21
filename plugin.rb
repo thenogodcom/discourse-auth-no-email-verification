@@ -19,8 +19,8 @@ after_initialize do
     else
       token = EmailToken.find_by(email: user.email)
       if token
-        token.confirmed = true
-        token.save!
+         token.confirmed = true
+         token.save!
       end
     end
   end
