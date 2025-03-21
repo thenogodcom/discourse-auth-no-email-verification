@@ -5,9 +5,11 @@
 # url: https://github.com/thenogodcom/discourse-auth-no-email-verification
 
 cd /var/discourse
+
 nano containers/app.yml
 
 - git	clone https://github.com/thenogodcom/discourse-auth-no-email-verification.git
 
 - cd /var/discourse
+
 ./launcher rebuild app
